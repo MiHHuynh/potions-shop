@@ -11,3 +11,49 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+form {
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+label {
+  display: block;
+  font: 1rem 'Fira Sans', sans-serif;
+  text-align: left;
+}
+
+input,
+label {
+  margin: .4rem 0;
+}
+
+input, select {
+  -ms-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box; 
+  box-sizing: content-box;
+  border: 0.5px solid gray;
+  padding: 10px 10px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.errorField, .errorText, .required {
+  color: red;
+}
+
+.errorField {
+  border: 0.9px solid red;
+}
+
+.errorText {
+  font-size: smaller;
+  margin-top: 0;
+  text-align: left;
+}
+
+.image {
+  width: 200px;
+}
