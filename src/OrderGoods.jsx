@@ -26,7 +26,7 @@ const OrderGoods = ({ quantity, total, setQuantity, setTotal, canSubmit,setCanSu
   };
 
   const handleBlurQuantity = (event) => {
-    if (event.target.value == 0) {
+    if (event.target.value === 0) {
       setShowQuantityError(true);
       setQuantityErrorText(errors.zeroQuantity);
     }

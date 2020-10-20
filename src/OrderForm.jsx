@@ -34,11 +34,29 @@ const OrderForm = () => {
   const [expirationDate, setExpirationDate] = useState(initialValues.expirationDate);
   const [goodsSectionReady, setGoodsSectionReady] = useState(false);
   const [billingInfoReady, setBillingInfoReady] = useState(true);
+  const [message, setMessage] = useState('');
+
+  const resetForm = () => {
+    console.log('resetting');
+    setFirstName(initialValues.firstName);
+    setLastName(initialValues.lastName);
+    setEmail(initialValues.email);
+    setStreet1(initialValues.street1);
+    setStreet2(initialValues.street2);
+    setCity(initialValues.city);
+    setState(initialValues.state);
+    setZip(initialValues.zip);
+    setPhone(initialValues.phone);
+    setQuantity(initialValues.quantity);
+    setTotal(initialValues.total);
+    setCreditCardNumber(initialValues.creditCardNumber);
+    setExpirationDate(initialValues.expirationDate);
+    setGoodsSectionReady(false);
+    setBillingInfoReady(true);
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("submitted");
-
     const postData = {
       'firstName': firstName,
       'lastName': lastName,
@@ -63,15 +81,15 @@ const OrderForm = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(postData)
     };
-    const response = await fetch('/api/magic', requestOptions); // TODO: set up proxy
+    const response = await fetch('/api/magic', requestOptions);
     const data = await response.json();
-    // this.setState({postId: data.id});
-    console.log(requestOptions);
-    console.log('data', data);
-    if (goodsSectionReady && billingInfoReady) {
-      console.log("both sections ready to submit");
+    if (response.status === 201) {
+      setMessage('Your order has been placed!');
     }
-    console.log(postData)
+    resetForm();
+    console.log('requestoptions', requestOptions);
+    console.log('response', response);
+    console.log('data', data);
   }
 
   return (
@@ -112,6 +130,7 @@ const OrderForm = () => {
         setCanSubmit={setBillingInfoReady}
       />
       <SubmitOrderButton canSubmit={goodsSectionReady && billingInfoReady} />
+      <p>{message}</p>
     </form>
   );
 }

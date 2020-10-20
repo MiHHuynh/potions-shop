@@ -7,6 +7,7 @@ const BillingInformation = ({
   lastName,
   email,
   street1,
+  street2,
   city,
   state,
   zip,
@@ -80,6 +81,7 @@ const BillingInformation = ({
 
   const handleChangeFirstName = (event) => {
     if (canSubmit) setCanSubmit(false);
+    setFirstName(event.target.value);
     if (event.target.value && !isValidText(event.target.value)) {
       if (!showFirstNameError) setShowFirstNameError(true);
     }
@@ -102,6 +104,7 @@ const BillingInformation = ({
   
   const handleChangeLastName = (event) => {
     if (canSubmit) setCanSubmit(false);
+    setLastName(event.target.value);
     if (event.target.value && !isValidText(event.target.value)) {
       if (!showLastNameError) setShowLastNameError(true);
     }
@@ -124,6 +127,7 @@ const BillingInformation = ({
 
   const handleChangeStreet1 = (event) => {
     if (canSubmit) setCanSubmit(false);
+    setStreet1(event.target.value);
     if (event.target.value && !isValidAddress(event.target.value)) {
       if (!showStreet1Error) setShowStreet1Error(true);
     }
@@ -144,6 +148,10 @@ const BillingInformation = ({
     }
   }
 
+  const handleChangeStreet2 = (event) => {
+    setStreet2(event.target.value);
+  }
+
   const handleBlurStreet2 = (event) => {
     if (event.target.value) {
       setStreet2(event.target.value);
@@ -152,6 +160,7 @@ const BillingInformation = ({
   
   const handleChangeCity = (event) => {
     if (canSubmit) setCanSubmit(false);
+    setCity(event.target.value);
     if (event.target.value && !isValidText(event.target.value)) {
       if (!showCityError) setShowCityError(true);
     }
@@ -171,6 +180,10 @@ const BillingInformation = ({
       if (readyToSubmit()) setCanSubmit(true);
     }
   }
+
+  const handleChangeState = (event) => {
+    setState(event.target.value);
+  }
   
   const handleBlurState = (event) => {
     if (!event.target.value) {
@@ -185,6 +198,7 @@ const BillingInformation = ({
 
   const handleChangeZip = (event) => {
     if (canSubmit) setCanSubmit(false);
+    setZip(event.target.value);
     if (!event.target.value || !isValidZipCode(event.target.value)) {
       if (!showZipError) setShowZipError(true);
     }
@@ -207,6 +221,7 @@ const BillingInformation = ({
 
   const handleChangeEmail = (event) => {
     if (canSubmit) setCanSubmit(false);
+    setEmail(event.target.value);
     if (!event.target.value || !isValidEmail(event.target.value)) {
       if (!showEmailError) setShowEmailError(true);
     }
@@ -229,6 +244,7 @@ const BillingInformation = ({
 
   const handleChangePhone = (event) => {
     if (canSubmit) setCanSubmit(false);
+    setPhone(event.target.value);
     if (!event.target.value || !isValidPhoneNumber(event.target.value)) {
       if (!showPhoneNumberError) setShowPhoneNumberError(true);
     }
@@ -251,6 +267,7 @@ const BillingInformation = ({
 
   const handleChangeCreditCardNumber = (event) => {
     if (canSubmit) setCanSubmit(false);
+    setCreditCardNumber(event.target.value);
     if (!event.target.value || !isValidCreditCardNumber(event.target.value)) {
       if (!showCreditCardNumberError) setShowCreditCardNumberError(true);
     }
@@ -273,6 +290,7 @@ const BillingInformation = ({
 
   const handleChangeCreditExpiration = (event) => {
     if (canSubmit) setCanSubmit(false);
+    setExpirationDate(event.target.value);
     if (!event.target.value || !isValidExpirationDate(event.target.value)) {
       if (!showExpirationDateError) setShowExpirationDateError(true);
     }
@@ -300,6 +318,7 @@ const BillingInformation = ({
       <input
         type="text"
         name="firstName"
+        value={firstName}
         placeholder="First Name"
         onChange={handleChangeFirstName}
         onBlur={handleBlurFirstName}
@@ -310,6 +329,7 @@ const BillingInformation = ({
       <input
         type="text"
         name="lastName"
+        value={lastName}
         placeholder="Last Name"
         onChange={handleChangeLastName}
         onBlur={handleBlurLastName}
@@ -320,6 +340,7 @@ const BillingInformation = ({
       <input
         type="text"
         name="street1"
+        value={street1}
         placeholder="Address Line 1"
         onChange={handleChangeStreet1}
         onBlur={handleBlurStreet1}
@@ -330,13 +351,16 @@ const BillingInformation = ({
       <input
         type="text"
         name="street2"
+        value={street2}
         placeholder="Address Line 2"
+        onChange={handleChangeStreet2}
         onBlur={handleBlurStreet2}
       />
       <label for="city">City<span className="required">*</span></label>
       <input
         type="text"
         name="city"
+        value={city}
         placeholder="City"
         onChange={handleChangeCity}
         onBlur={handleBlurCity}
@@ -344,7 +368,7 @@ const BillingInformation = ({
       />
       {showCityError && <p className="errorText">Please enter a valid city.</p>}
       <label for="state">State<span className="required">*</span></label>
-      <select name="state" onBlur={handleBlurState} className={showStateError ? "errorField" : ""}>
+      <select name="state" value={state} onChange={handleChangeState} onBlur={handleBlurState} className={showStateError ? "errorField" : ""}>
         <option></option>
         <option value="AL">Alabama</option>
         <option value="AK">Alaska</option>
@@ -402,7 +426,8 @@ const BillingInformation = ({
       <label for="zip">Zip Code<span className="required">*</span></label>
       <input
         type="text"
-        name="zip" 
+        name="zip"
+        value={zip}
         placeholder="Zip Code"
         onChange={handleChangeZip}
         onBlur={handleBlurZip}
@@ -413,6 +438,7 @@ const BillingInformation = ({
       <input
         type="email"
         name="email"
+        value={email}
         placeholder="Email Address"
         onChange={handleChangeEmail}
         onBlur={handleBlurEmail}
@@ -423,6 +449,7 @@ const BillingInformation = ({
       <input
         type="text"
         name="phone"
+        value={phone}
         placeholder="000-000-0000"
         onChange={handleChangePhone}
         onBlur={handleBlurPhone}
@@ -433,6 +460,7 @@ const BillingInformation = ({
       <input
         type="text"
         name="ccNum"
+        value={creditCardNumber}
         placeholder="1234 5678 9012 3456"
         onChange={handleChangeCreditCardNumber}
         onBlur={handleBlurCreditCardNumber}
@@ -443,7 +471,8 @@ const BillingInformation = ({
       <input
         type="text"
         name="exp"
-        placeholder="mm/yy"
+        value={expirationDate}
+        placeholder="mmyy"
         onChange={handleChangeCreditExpiration}
         onBlur={handleBlurCreditExpiration}
         className={showExpirationDateError ? "errorField" : ""}
