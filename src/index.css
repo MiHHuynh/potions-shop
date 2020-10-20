@@ -18,6 +18,20 @@ form {
   margin-right: auto;
 }
 
+.notification {
+  border: 1px solid black;
+  padding: 1em;
+  border-radius: 5px;
+  background: lightgoldenrodyellow;
+  font-size: larger;
+  position: sticky;
+  top: 0;
+}
+
+.hidden {
+  display: none;
+}
+
 label {
   display: block;
   font: 1rem 'Fira Sans', sans-serif;

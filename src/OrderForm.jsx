@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import BillingInformation from './BillingInformation';
 import OrderGoods from './OrderGoods';
 import SubmitOrderButton from './SubmitOrderButton';
@@ -37,7 +37,6 @@ const OrderForm = () => {
   const [message, setMessage] = useState('');
 
   const resetForm = () => {
-    console.log('resetting');
     setFirstName(initialValues.firstName);
     setLastName(initialValues.lastName);
     setEmail(initialValues.email);
@@ -85,6 +84,8 @@ const OrderForm = () => {
     const data = await response.json();
     if (response.status === 201) {
       setMessage('Your order has been placed!');
+    } else if (data.error) {
+      setMessage(data.error);
     }
     resetForm();
     console.log('requestoptions', requestOptions);
@@ -94,6 +95,7 @@ const OrderForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <p className={`notification ${message ? '' : 'hidden'}`}>{message}</p>
       <OrderGoods
         quantity={quantity}
         setQuantity={setQuantity}
@@ -130,7 +132,6 @@ const OrderForm = () => {
         setCanSubmit={setBillingInfoReady}
       />
       <SubmitOrderButton canSubmit={goodsSectionReady && billingInfoReady} />
-      <p>{message}</p>
     </form>
   );
 }
