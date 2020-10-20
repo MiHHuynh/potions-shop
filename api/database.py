@@ -30,13 +30,13 @@ def get_orders_this_month_by_email(email):
     orders_this_month = [
         order for order in DATABASE['Order']
         if (
-            order['order_date'].month == this_month and
-            order['order_date'].year == this_year and
-            order['email'] == email
+            order.order_date.month == this_month and
+            order.order_date.year == this_year and
+            order.email == email
         )
     ]
     return orders_this_month
 
 def get_total_purchased_potions(orders):
     # Ideally, this would be a db query and count provided for by an ORM.
-    return sum([order['quantity'] for order in orders])
+    return sum([order.quantity for order in orders])
