@@ -2,6 +2,17 @@ import React, { useState } from 'react';
 import { isValidText, isValidEmail, isValidPhoneNumber, isValidAddress, isValidZipCode, isValidCreditCardNumber, isValidExpirationDate } from './validators';
 
 const BillingInformation = ({
+  initialValues,
+  firstName,
+  lastName,
+  email,
+  street1,
+  city,
+  state,
+  zip,
+  phone,
+  creditCardNumber,
+  expirationDate,
   setFirstName,
   setLastName,
   setEmail,
@@ -11,13 +22,14 @@ const BillingInformation = ({
   setState,
   setZip,
   setPhone,
-  setCcNum,
-  setExpirationDate
+  setCreditCardNumber,
+  setExpirationDate,
+  canSubmit,
+  setCanSubmit
 }) => {
   const [showFirstNameError, setShowFirstNameError] = useState(false);
   const [showLastNameError, setShowLastNameError] = useState(false);
   const [showStreet1Error, setShowStreet1Error] = useState(false);
-  const [showStreet2Error, setShowStreet2Error] = useState(false);
   const [showCityError, setShowCityError] = useState(false);
   const [showStateError, setShowStateError] = useState(false);
   const [showZipError, setShowZipError] = useState(false);
@@ -26,69 +38,96 @@ const BillingInformation = ({
   const [showCreditCardNumberError, setShowCreditCardNumberError] = useState(false);
   const [showExpirationDateError, setShowExpirationDateError] = useState(false);
 
-  const checkCanSubmit = () => {
-    // TODO:
-    // need to know if everything has been touched
-    // check that all have been touched and are now all valid
+  const areAllFieldsTouched = () => {
+    if (
+      initialValues.firstName !== firstName &&
+      initialValues.lastName !== lastName &&
+      initialValues.email !== email &&
+      initialValues.street1 !== street1 &&
+      initialValues.city !== city &&
+      initialValues.state !== state &&
+      initialValues.zip !== zip &&
+      initialValues.phone !== phone &&
+      initialValues.creditCardNumber !== creditCardNumber &&
+      initialValues.expirationDate !== expirationDate
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  const noErrors = () => {
+    if (
+      !showFirstNameError &&
+      !showLastNameError &&
+      !showStreet1Error &&
+      !showCityError &&
+      !showStateError &&
+      !showZipError &&
+      !showEmailError &&
+      !showPhoneNumberError &&
+      !showCreditCardNumberError &&
+      !showExpirationDateError
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  const readyToSubmit = () => {
+    return (areAllFieldsTouched() && noErrors());
   }
 
   const handleChangeFirstName = (event) => {
-    // when the input changes, validate it.
-    // if it's not valid, show the error.
-    // if it IS valid, turn off the error if it's on, and log it to the state of the parent (THE FORM)
-    console.log(event.target.value);
+    if (canSubmit) setCanSubmit(false);
     if (event.target.value && !isValidText(event.target.value)) {
-      if (!showFirstNameError) setShowFirstNameError(true); // only set the state if it needs to be changed to avoid unnecessary rerenders
+      if (!showFirstNameError) setShowFirstNameError(true);
     }
     else {
-      // does it make sense to log the value to the state while changing vs. just onBlur?
       if (showFirstNameError) setShowFirstNameError(false);
       setFirstName(event.target.value);
     }
   }
 
   const handleBlurFirstName = (event) => {
-    console.log('blur first name');
-    // if it's invalid, make sure error is showing
     if (!event.target.value || !isValidText(event.target.value)) {
-      if (!showFirstNameError) setShowFirstNameError(true); // only set the state if it needs to be changed to avoid unnecessary rerenders
+      if (!showFirstNameError) setShowFirstNameError(true);
     }
     else {
       if (showFirstNameError) setShowFirstNameError(false);
       setFirstName(event.target.value);
+      if (readyToSubmit()) setCanSubmit(true);
     }
   }
   
   const handleChangeLastName = (event) => {
-    console.log(event.target.value);
+    if (canSubmit) setCanSubmit(false);
     if (event.target.value && !isValidText(event.target.value)) {
       if (!showLastNameError) setShowLastNameError(true);
     }
     else {
-      // does it make sense to log the value to the state while changing vs. just onBlur?
       if (showLastNameError) setShowLastNameError(false);
       setLastName(event.target.value);
     }
   }
   
   const handleBlurLastName = (event) => {
-    // if it's invalid, make sure error is showing
     if (!event.target.value || !isValidText(event.target.value)) {
-      if (!showLastNameError) setShowLastNameError(true); // only set the state if it needs to be changed to avoid unnecessary rerenders
+      if (!showLastNameError) setShowLastNameError(true);
     }
     else {
       if (showLastNameError) setShowLastNameError(false);
       setLastName(event.target.value);
+      if (readyToSubmit()) setCanSubmit(true);
     }
   }
 
   const handleChangeStreet1 = (event) => {
-    console.log(event.target.value);
+    if (canSubmit) setCanSubmit(false);
     if (event.target.value && !isValidAddress(event.target.value)) {
       if (!showStreet1Error) setShowStreet1Error(true);
     }
     else {
-      // does it make sense to log the value to the state while changing vs. just onBlur?
       if (showStreet1Error) setShowStreet1Error(false);
       setStreet1(event.target.value);
     }
@@ -96,42 +135,40 @@ const BillingInformation = ({
 
   const handleBlurStreet1 = (event) => {
     if (!event.target.value || !isValidAddress(event.target.value)) {
-      if (!showStreet1Error) setShowStreet1Error(true); // only set the state if it needs to be changed to avoid unnecessary rerenders
+      if (!showStreet1Error) setShowStreet1Error(true);
     }
     else {
       if (showStreet1Error) setShowStreet1Error(false);
       setStreet1(event.target.value);
+      if (readyToSubmit()) setCanSubmit(true);
     }
   }
 
-  const handleChangeStreet2 = (event) => {
-    // validateText(event.target.value);
-  }
-
   const handleBlurStreet2 = (event) => {
-    // validateText(event.target.value);
+    if (event.target.value) {
+      setStreet2(event.target.value);
+    }
   }
   
   const handleChangeCity = (event) => {
-    console.log(event.target.value);
+    if (canSubmit) setCanSubmit(false);
     if (event.target.value && !isValidText(event.target.value)) {
       if (!showCityError) setShowCityError(true);
     }
     else {
-      // does it make sense to log the value to the state while changing vs. just onBlur?
       if (showCityError) setShowCityError(false);
       setCity(event.target.value);
     }
   }
   
   const handleBlurCity = (event) => {
-    // if it's invalid, make sure error is showing
     if (!event.target.value || !isValidText(event.target.value)) {
-      if (!showCityError) setShowCityError(true); // only set the state if it needs to be changed to avoid unnecessary rerenders
+      if (!showCityError) setShowCityError(true);
     }
     else {
       if (showCityError) setShowCityError(false);
       setCity(event.target.value);
+      if (readyToSubmit()) setCanSubmit(true);
     }
   }
   
@@ -142,12 +179,14 @@ const BillingInformation = ({
     else {
       if (showStateError) setShowStateError(false);
       setState(event.target.value);
+      if (readyToSubmit()) setCanSubmit(true);
     }
   }
 
   const handleChangeZip = (event) => {
+    if (canSubmit) setCanSubmit(false);
     if (!event.target.value || !isValidZipCode(event.target.value)) {
-      if (!showZipError) setShowZipError(true); // only set the state if it needs to be changed to avoid unnecessary rerenders
+      if (!showZipError) setShowZipError(true);
     }
     else {
       if (showZipError) setShowZipError(false);
@@ -157,17 +196,19 @@ const BillingInformation = ({
   
   const handleBlurZip = (event) => {
     if (!event.target.value || !isValidZipCode(event.target.value)) {
-      if (!showZipError) setShowZipError(true); // only set the state if it needs to be changed to avoid unnecessary rerenders
+      if (!showZipError) setShowZipError(true);
     }
     else {
       if (showZipError) setShowZipError(false);
       setZip(event.target.value);
+      if (readyToSubmit()) setCanSubmit(true);
     }
   }
 
   const handleChangeEmail = (event) => {
+    if (canSubmit) setCanSubmit(false);
     if (!event.target.value || !isValidEmail(event.target.value)) {
-      if (!showEmailError) setShowEmailError(true); // only set the state if it needs to be changed to avoid unnecessary rerenders
+      if (!showEmailError) setShowEmailError(true);
     }
     else {
       if (showEmailError) setShowEmailError(false);
@@ -176,19 +217,20 @@ const BillingInformation = ({
   }
   
   const handleBlurEmail = (event) => {
-    // if it's invalid, make sure error is showing
     if (!event.target.value || !isValidEmail(event.target.value)) {
-      if (!showEmailError) setShowEmailError(true); // only set the state if it needs to be changed to avoid unnecessary rerenders
+      if (!showEmailError) setShowEmailError(true);
     }
     else {
       if (showEmailError) setShowEmailError(false);
       setEmail(event.target.value);
+      if (readyToSubmit()) setCanSubmit(true);
     }
   }
 
   const handleChangePhone = (event) => {
+    if (canSubmit) setCanSubmit(false);
     if (!event.target.value || !isValidPhoneNumber(event.target.value)) {
-      if (!showPhoneNumberError) setShowPhoneNumberError(true); // only set the state if it needs to be changed to avoid unnecessary rerenders
+      if (!showPhoneNumberError) setShowPhoneNumberError(true);
     }
     else {
       if (showPhoneNumberError) setShowPhoneNumberError(false);
@@ -197,23 +239,24 @@ const BillingInformation = ({
   }
   
   const handleBlurPhone = (event) => {
-    // if it's invalid, make sure error is showing
     if (!event.target.value || !isValidPhoneNumber(event.target.value)) {
-      if (!showPhoneNumberError) setShowPhoneNumberError(true); // only set the state if it needs to be changed to avoid unnecessary rerenders
+      if (!showPhoneNumberError) setShowPhoneNumberError(true);
     }
     else {
       if (showPhoneNumberError) setShowPhoneNumberError(false);
       setPhone(event.target.value);
+      if (readyToSubmit()) setCanSubmit(true);
     }
   }
 
   const handleChangeCreditCardNumber = (event) => {
+    if (canSubmit) setCanSubmit(false);
     if (!event.target.value || !isValidCreditCardNumber(event.target.value)) {
-      if (!showCreditCardNumberError) setShowCreditCardNumberError(true); // only set the state if it needs to be changed to avoid unnecessary rerenders
+      if (!showCreditCardNumberError) setShowCreditCardNumberError(true);
     }
     else {
       if (showCreditCardNumberError) setShowCreditCardNumberError(false);
-      setCcNum(event.target.value);
+      setCreditCardNumber(event.target.value);
     }
   }
 
@@ -223,11 +266,13 @@ const BillingInformation = ({
     }
     else {
       if (showCreditCardNumberError) setShowCreditCardNumberError(false);
-      setCcNum(event.target.value);
+      setCreditCardNumber(event.target.value);
+      if (readyToSubmit()) setCanSubmit(true);
     }
   }
 
   const handleChangeCreditExpiration = (event) => {
+    if (canSubmit) setCanSubmit(false);
     if (!event.target.value || !isValidExpirationDate(event.target.value)) {
       if (!showExpirationDateError) setShowExpirationDateError(true);
     }
@@ -244,6 +289,7 @@ const BillingInformation = ({
     else {
       if (showExpirationDateError) setShowExpirationDateError(false);
       setExpirationDate(event.target.value);
+      if (readyToSubmit()) setCanSubmit(true);
     }
   }
 
@@ -285,8 +331,8 @@ const BillingInformation = ({
         type="text"
         name="street2"
         placeholder="Address Line 2"
+        onBlur={handleBlurStreet2}
       />
-      {showStreet2Error && <p className="errorText">Please enter a valid address.</p>}
       <label for="city">City<span className="required">*</span></label>
       <input
         type="text"

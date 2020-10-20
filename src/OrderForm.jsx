@@ -4,20 +4,34 @@ import OrderGoods from './OrderGoods';
 import SubmitOrderButton from './SubmitOrderButton';
 
 const OrderForm = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [street1, setStreet1] = useState('');
-  const [street2, setStreet2] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [zip, setZip] = useState('');
-  const [phone, setPhone] = useState('');
-  const [quantity, setQuantity] = useState(0);
-  const [total, setTotal] = useState(0); // Specs want this as a string
-  const [ccNum, setCcNum] = useState('');
-  const [expirationDate, setExpirationDate] = useState('');
-  const [canSubmit, setCanSubmit] = useState(false);
+  const initialValues = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    street1: '',
+    street2: '',
+    city: '',
+    state: '',
+    zip: '',
+    phone: '',
+    quantity: 0,
+    total: 0,
+    creditCardNumber: '',
+    expirationDate: ''
+  }
+  const [firstName, setFirstName] = useState(initialValues.firstName);
+  const [lastName, setLastName] = useState(initialValues.lastName);
+  const [email, setEmail] = useState(initialValues.email);
+  const [street1, setStreet1] = useState(initialValues.street1);
+  const [street2, setStreet2] = useState(initialValues.street2);
+  const [city, setCity] = useState(initialValues.city);
+  const [state, setState] = useState(initialValues.state);
+  const [zip, setZip] = useState(initialValues.zip);
+  const [phone, setPhone] = useState(initialValues.phone);
+  const [quantity, setQuantity] = useState(initialValues.quantity);
+  const [total, setTotal] = useState(initialValues.total); // Specs want this as a string
+  const [creditCardNumber, setCreditCardNumber] = useState(initialValues.creditCardNumber);
+  const [expirationDate, setExpirationDate] = useState(initialValues.expirationDate);
   const [goodsSectionReady, setGoodsSectionReady] = useState(false);
   const [billingInfoReady, setBillingInfoReady] = useState(true);
 
@@ -40,7 +54,7 @@ const OrderForm = () => {
       'quantity': quantity,
       'total': total,
       'payment': {
-        'ccNum': ccNum,
+        'ccNum': creditCardNumber,
         'exp': expirationDate
       }
     };
@@ -70,6 +84,7 @@ const OrderForm = () => {
         setCanSubmit={setGoodsSectionReady}
       />
       <BillingInformation
+        initialValues={initialValues}
         firstName={firstName}
         setFirstName={setFirstName}
         lastName={lastName}
@@ -88,8 +103,8 @@ const OrderForm = () => {
         setZip={setZip}
         phone={phone}
         setPhone={setPhone}
-        ccNum={ccNum}
-        setCcNum={setCcNum}
+        creditCardNumber={creditCardNumber}
+        setCreditCardNumber={setCreditCardNumber}
         expirationDate={expirationDate}
         setExpirationDate={setExpirationDate}
         canSubmit={billingInfoReady}
