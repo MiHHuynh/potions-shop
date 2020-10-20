@@ -35,7 +35,7 @@ const OrderForm = () => {
   const [goodsSectionReady, setGoodsSectionReady] = useState(false);
   const [billingInfoReady, setBillingInfoReady] = useState(true);
 
-  const handleSubmit = event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("submitted");
 
@@ -58,15 +58,16 @@ const OrderForm = () => {
         'exp': expirationDate
       }
     };
-    // const requestOptions = {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(postData)
-    // };
-    // // const response = await fetch('/api/magic', requestOptions); // TODO: set up proxy
-    // // const data = await response.json();
-    // // this.setState({postId: data.id});
-    // console.log(requestOptions);
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(postData)
+    };
+    const response = await fetch('/api/magic', requestOptions); // TODO: set up proxy
+    const data = await response.json();
+    // this.setState({postId: data.id});
+    console.log(requestOptions);
+    console.log('data', data);
     if (goodsSectionReady && billingInfoReady) {
       console.log("both sections ready to submit");
     }

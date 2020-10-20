@@ -11,16 +11,16 @@ const OrderGoods = ({ quantity, total, setQuantity, setTotal, canSubmit,setCanSu
 
   const handleChangeQuantity = (event) => {
     if (canSubmit) setCanSubmit(false);
-    setQuantity(event.target.value);
+    setQuantity(parseInt(event.target.value));
     if (event.target.value && event.target.value > 3) {
       setShowQuantityError(true);
       setQuantityErrorText(errors.exceedsMax);
     }
     else {
       if (showQuantityError) setShowQuantityError(false);
-      setQuantity(event.target.value);
+      setQuantity(parseInt(event.target.value));
       let total = event.target.value * 49.99;
-      setTotal(total);
+      setTotal(total.toString());
       setCanSubmit(true);
     }
   };
