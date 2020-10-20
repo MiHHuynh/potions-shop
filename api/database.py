@@ -1,3 +1,5 @@
+from datetime import date
+
 DATABASE = {
     'Order': []
 }
@@ -6,8 +8,19 @@ def create(table, entry):
     DATABASE[table].append(entry)
     return (entry, True)
 
+def delete_by_uid(table, uid):
+    entry = get_from_database_by_uid(table, uid)
+    if not entry:
+        return (None, False)
+    DATABASE[table].remove(entry)
+    return (entry, True)
+
+def get_from_database_by_uid(table, uid):
+    return [entry for entry in DATABASE[table] if entry.id == uid]
+
 def get_orders_this_month_by_email(email):
     # Assumption: A customer can only purchase 3 potions max per calendar month, whether in separate orders or within a single order.
+
     # Ideally, this would be a filter query provided for by an ORM.
     # Pseudocode if there were an ORM: Order.objects.filter(email=email && order_date.month=this_month && order_date.year=this.year)
 

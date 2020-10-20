@@ -5,7 +5,10 @@ from flask import Flask, request, make_response
 from database import (
     DATABASE,
     create,
-    get_orders_this_month_by_email, get_total_purchased_potions
+    delete_by_uid,
+    get_from_database_by_uid,
+    get_orders_this_month_by_email,
+    get_total_purchased_potions
 )
 from models import Order
 
@@ -13,9 +16,9 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return make_response("All systems are go!", 200)
+    return make_response('All systems are go!', 200)
 
-@app.route('/api/magic', methods=['POST'])
+@app.route('/api/magic', methods=['POST', 'PATCH'])
 def post_order():
     if request.method == 'POST':
         data = request.get_json()
@@ -54,45 +57,47 @@ def post_order():
         created_order, created = create('Order', new_order)
 
         if not created:
-            return make_response({"error": ''}, 201)    
-        return make_response({"id": created_order.uid}, 201)
+            return make_response({'error': 'Unable to create order.'}, 503)
+        return make_response({'id': created_order.id}, 201)
+    if request.method == 'PATCH':
+        """
+        After some research, it seems that making a PATCH request to /api/magic with no uid is understood to be a PATCH on multiple resources, with the payload containing the change to be made and an order of operations to specify which resources. Although the specs say to make a PATCH route to /api/magic, I opted to put it under /api/magic/<uid> because the use will be for single resources, implied/assumed from the payload specifications.
+        """
+        pass
 
 @app.route('/api/magic/<uid>', methods=['GET', 'PATCH', 'DELETE'])
 def get_patch_delete_order(uid):
     if request.method == 'GET':
-        order = get_from_database("Order", uid) # TODO: Implement get_from_database
+        order = get_from_database_by_uid('Order', uid)
         if not order:
-            return make_response({"error": "Resource not found"}, 404)
-        return make_response(order, 200)
+            return make_response({'error': 'Resource not found.'}, 404)
+        return make_response(_shape_order(order[0]), 200)
     elif request.method == 'PATCH':
-        # TODO: Move PATCH to /api/magic
         data = request.get_json()
         if not data:
             return make_response({'error': 'No data in POST body.'}, 400)
-        if 'id' in data:
-            order = get_from_database("Order", uid) # TODO: Implement get_from_database
-            if not order:
-                return make_response({"error": "Resource not found"}, 404)
-            if 'fulfilled' in data:
-                order['fulfilled'] = data['fulfilled'] # This is like updating a db entry
-            return make_response("Resource updated successfully", 204)
-        return make_response({'error': 'No order id in POST body.'}, 400)
+        order = get_from_database_by_uid('Order', uid)
+        if not order:
+            return make_response({'error': 'Resource not found'}, 404)
+        if 'fulfilled' in data:
+            order[0]['fulfilled'] = data['fulfilled'] # This would typically be a db update.
+            return make_response('Resource updated successfully', 204)
     elif request.method == 'DELETE':
-        # TODO: Implement delete
-        pass
-    pass
+        _, deleted = delete_by_uid('Order', uid)
+        if deleted:
+            return make_response({'Resource deleted successfully'}, 204)
+        return make_response({'error': 'Resource not found.'}, 404)
 
-
-# TODO LIST:
-"""
-- Go through todos from above
-- Unit tests for back end
-- Make sure everything is working
-- Setup proxy so client can call backend ?
-- Redesign the fake db so that Order table is a dictionary, with uid being the key and the object being the value
-- Write up Readme for API architecture and how to run it locally
-- Research validation for client-side
-- Calculation of total price
-- Notifications for validation and order placed
-- Research and be able to speak about any package and how things are done, tradeoffs, etc.
-"""
+def _shape_order(order):
+    return {
+        'firstName': order.first_name,
+        'lastName': order.last_name,
+        'email': order.email,
+        'address': order.address,
+        'phone': order.phone,
+        'payment': order.payment,
+        'quantity': order.quantity,
+        'total': order.total,
+        'orderDate': order.order_date,
+        'fulfilled': order.fulfilled
+    }
